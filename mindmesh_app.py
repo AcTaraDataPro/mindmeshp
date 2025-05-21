@@ -4,7 +4,7 @@ import random
 import openai
 
 # Set your OpenAI API key
-openai.api_key = st.secrets["openai_api_key"]
+openai.api_key = st.secrets["sk-XXXXXXXXXXXXXXXXXXXXXXXXX"]
 
 # Simulated user database (for now)
 USERS = {"tara": "mindmesh123"}

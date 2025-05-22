@@ -2,7 +2,7 @@ import streamlit as st
 import datetime
 import random
 import openai
-from openai import OpenAI
+from openai import OpenAI, RateLimitError
 
 client = OpenAI(api_key=st.secrets["openai_api_key"])
 
@@ -26,12 +26,14 @@ def get_daily_prompt(username):
     ])
     user_input = f"Give {username} a motivational insight or tip about {prompt_seed}."
 
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": user_input}]
-    )
-
-    return response.choices[0].message.content
+    try:
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": user_input}]
+        )
+        return response.choices[0].message.content
+    except RateLimitError:
+        return "⚠️ OpenAI rate limit reached. Try again later or check your API usage."
 # App flow
 if "logged_in" not in st.session_state:
     authenticate_user()

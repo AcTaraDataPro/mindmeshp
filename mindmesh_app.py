@@ -2,9 +2,9 @@ import streamlit as st
 import datetime
 import random
 import openai
+from openai import OpenAI
 
-# Set your OpenAI API key
-openai.api_key = st.secrets["openai_api_key"]
+client = OpenAI(api_key=st.secrets["openai_api_key"])
 
 # Simulated user database (for now)
 USERS = {"tara": "mindmesh123"}
@@ -26,12 +26,12 @@ def get_daily_prompt(username):
     ])
     user_input = f"Give {username} a motivational insight or tip about {prompt_seed}."
 
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": user_input}]
     )
-    return response.choices[0].message["content"]
 
+    return response.choices[0].message.content
 # App flow
 if "logged_in" not in st.session_state:
     authenticate_user()
